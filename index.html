@@ -90,7 +90,7 @@
             'delete': {
                 description: 'This command removes elements.',
                 args: 'Element tag name to delete.',
-                action: function(f) {
+                action: function(f, token) {
                     f(function(x) {
                         x.remove();
                     });
@@ -98,19 +98,41 @@
             },
             go: {
                 description: 'Follows a link.',
-                args: 'The name of the link to follow.'
+                args: 'The name of the link to follow.',
+                action: function(_, token) {
+                    execute('a')(function(x) {
+                        if (x.innerText === token) {
+                            window.location = x.href;
+                        }
+                    });
+                }
             },
             hide: {
                 description: 'Hides elements.',
-                args: 'Tags to hide.'
+                args: 'Tags to hide.',
+                action: function(f, token) {
+                    f(function(x) {
+                        x.className = 'hide';
+                    });
+                }
             },
             highlight: {
                 description: 'Highlights elements.',
-                args: 'Tags to highlight.'
+                args: 'Tags to highlight.',
+                action: function(f, token) {
+                    f(function(x) {
+                        x.className = 'highlight-things';
+                    });
+                }
             },
             show: {
                 description: 'Shows elements.',
-                args: 'Tags to show.'
+                args: 'Tags to show.',
+                action: function(f, token) {
+                    f(function(x) {
+                        x.className = 'show';
+                    });
+                }
             }
         };
         var execute = function(token) {
@@ -160,40 +182,7 @@
                 }
             } else if (tokens.length > 1) {
                 var exec = execute(tokens[1]);
-                commands[tokens[0]].action(exec);
-                switch(tokens[0]) {
-                    case 'delete':
-                        exec(function(x) {
-                            x.remove();
-                        });
-                        break;
-                    case 'go':
-                        execute('a')(function(x) {
-                            if (x.innerText === tokens[1]) {
-                                window.location = x.href;
-                            }
-                        });
-                        break;
-                    case 'hide':
-                        exec(function(x) {
-                            x.className = 'hide';
-                        });
-                        break;
-                    case 'highlight':
-                        exec(function(x) {
-                            x.className = 'highlight-things';
-                        });
-                        break;
-                    case 'run':
-                        break;
-                    case 'show':
-                        exec(function(x) {
-                            x.className = 'show';
-                        });
-                        break;
-                    default:
-                        help(tokens[0]);
-                }
+                commands[tokens[0]].action(exec, tokens[1]);
             } else {
                 alert("dafuq");
             }
