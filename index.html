@@ -188,8 +188,20 @@
             }
         };
 
-        command.onkeypress = function(event) {
+        command.onkeydown = function(event) {
             switch(event.keyCode) {
+                case 9:
+                    event.preventDefault();
+                    var val = event.target.value.trim();
+                    if (val !== '') {
+                        var coms = Object.keys(commands).filter(function(command) {
+                            return command.substr(0, val.length) === val;
+                        });
+                        if (coms.length > 0) {
+                            event.target.value = coms[0];
+                        }
+                    }
+                    break;
                 case 13:
                     parse(event.target.value);
                     event.target.value = '';
