@@ -90,6 +90,11 @@
             'delete': {
                 description: 'This command removes elements.',
                 args: 'Element tag name to delete.'
+								action: function(f) {
+                    f(function(x) {
+                        x.remove();
+                    });
+                }
             },
             go: {
                 description: 'Follows a link.',
