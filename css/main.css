@@ -1,0 +1,57 @@
+a {
+	display: inline-block;
+	margin-right: 10px;
+	text-decoration: none;
+}
+
+body {
+	font-size: 26pt;
+	margin: 0;
+	padding: 0;
+}
+
+#command-wrapper label {
+	color: #45D40C;
+}
+
+#command-wrapper {
+	border: 1px solid black;
+	bottom: 0;
+	display: block;
+	position: fixed;
+	width: 100%;
+}
+
+#command {
+	border: none;
+	outline: 0;
+}
+
+.hide {
+	display: none;
+}
+
+.highlight-things {
+	background: #4499dd;
+	color: white;
+	padding: 10px;
+}
+
+.show {
+	display: auto;
+}
+
+/*Jackedsome shit*/
+.shell-wrap {
+	background: #141414;
+	box-shadow: 0 0 30px rgba(0,0,0,0.4);
+	margin: 100px auto 0 auto;
+	width: 500px;
+}
+
+.shell-body {
+	background: #141414;
+	color: #45D40C;
+	font: 0.8em 'Andale Mono', Consolas, 'Courier New';
+	line-height: 1.6em;
+	list-style: none;

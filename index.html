@@ -1,213 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Whoa</title>
-    <style type="text/css">
-        a {
-            display: inline-block;
-            margin-right: 10px;
-            text-decoration: none;
-        }
-        body {
-            font-size: 26pt;
-            margin: 0;
-            padding: 0;
-        }
-        #command-wrapper label {
-            color: #45D40C;
-        }
-        #command-wrapper {
-            border: 1px solid black;
-            bottom: 0;
-            display: block;
-            position: fixed;
-            width: 100%;
-        }
-        #command {
-            border: none;
-            outline: 0;
-        }
-        .hide {
-            display: none;
-        }
-        .highlight-things {
-            background: #4499dd;
-            color: white;
-            padding: 10px;
-        }
-        .show {
-            display: auto;
-        }
-
-        /*Jackedsome shit*/
-        .shell-wrap {
-          background: #141414;
-          box-shadow: 0 0 30px rgba(0,0,0,0.4);
-          margin: 100px auto 0 auto;
-          width: 500px;
-        }
-
-        .shell-body {
-          background: #141414;
-          color: #45D40C;
-          font: 0.8em 'Andale Mono', Consolas, 'Courier New';
-          line-height: 1.6em;
-          list-style: none;
-          margin: 0;
-          padding: 5px;
-        }
-
-        .shell-body:before {
-          content: '$';
-          left: 0;
-          position: absolute;
-          top: 0;
-        }
-
-        .shell-body {
-          padding: 0 0 0 15px;
-          position: relative;
-          word-wrap: break-word;
-        }
-    </style>
+<title>Whoa</title>
 </head>
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <body>
-    <div class="shell-wrap" id="command-wrapper">
-        <label for="command">&#8250;</label>
-        <input class="shell-body" id="command" name="command" placeholder="Enter a command" autofocus=true></input>
-    </div>
-    <div>
-        <a href="http://google.com">google</a>
-        <a href="http://yahoo.com">yahoo</a>
-        <a href="http://smartsite.ucdavis.edu">smartsite</a>
-    </div>
 
-    <div id="help"></div>
+<div class="shell-wrap" id="command-wrapper">
+    <label for="command">&#8250;</label>
+    <input class="shell-body" id="command" name="command" placeholder="Enter a command" autofocus=true></input>
+</div>
 
-    <script type="text/javascript">
-        var command = document.querySelector('#command');
-        var commands = {
-            'delete': {
-                description: 'This command removes elements.',
-                args: 'Element tag name to delete.',
-                action: function(f, token) {
-                    f(function(x) {
-                        x.remove();
-                    });
-                }
-            },
-            go: {
-                description: 'Follows a link.',
-                args: 'The name of the link to follow.',
-                action: function(_, token) {
-                    execute('a')(function(x) {
-                        if (x.innerText === token) {
-                            window.location = x.href;
-                        }
-                    });
-                }
-            },
-            hide: {
-                description: 'Hides elements.',
-                args: 'Tags to hide.',
-                action: function(f, token) {
-                    f(function(x) {
-                        x.className = 'hide';
-                    });
-                }
-            },
-            highlight: {
-                description: 'Highlights elements.',
-                args: 'Tags to highlight.',
-                action: function(f, token) {
-                    f(function(x) {
-                        x.className = 'highlight-things';
-                    });
-                }
-            },
-            show: {
-                description: 'Shows elements.',
-                args: 'Tags to show.',
-                action: function(f, token) {
-                    f(function(x) {
-                        x.className = 'show';
-                    });
-                }
-            }
-        };
-        var execute = function(token) {
-            return function(f) {
-                [].slice.call(document.querySelectorAll(token)).forEach(f);
-            };
-        };
+<div>
+    <a href="http://google.com">google</a>
+    <a href="http://yahoo.com">yahoo</a>
+    <a href="http://smartsite.ucdavis.edu">smartsite</a>
+</div>
 
-        var help = function() {
-            var defs = document.createElement('dl');
-            Object.keys(commands).forEach(function(key) {
-                var commandT = document.createElement('dt');
-                commandT.innerText = 'Command';
-                var command = document.createElement('dd');
-                command.innerText = key;
-                var descT = document.createElement('dt');
-                descT.innerText = 'Description';
-                var desc = document.createElement('dd');
-                desc.innerText = commands[key].description;
-                var argsT = document.createElement('dt');
-                argsT.innerText = 'Arguments';
-                var args = document.createElement('dd');
-                args.innerText = commands[key].args;
+<div id="help"></div>
 
-                defs.appendChild(commandT);
-                defs.appendChild(command);
-                defs.appendChild(descT);
-                defs.appendChild(desc);
-                defs.appendChild(argsT);
-                defs.appendChild(args);
-            });
-            document.getElementById('help').appendChild(defs);
-        };
-
-        var parse = function(str) {
-            var tokens = str.trim().split(' ');
-            if (tokens.length === 1) {
-                switch(tokens[0]) {
-                    case 'reboot':
-                        window.location.reload();
-                        break;
-                    case 'help':
-                        help();
-                        break;
-                    default:
-                        alert("that's not a command.");
-                }
-            } else if (tokens.length > 1) {
-                var exec = execute(tokens[1]);
-                commands[tokens[0]].action(exec, tokens[1]);
-            } else {
-                alert("dafuq");
-            }
-        };
-
-        command.onkeydown = function(event) {
-            switch(event.keyCode) {
-                case 9:
-                    event.preventDefault();
-                    var val = event.target.value.trim();
-                    if (val !== '') {
-                        var coms = Object.keys(commands).filter(function(command) {
-                            return command.substr(0, val.length) === val;
-                        });
-                        if (coms.length > 0) {
-                            event.target.value = coms[0];
-                        }
-                    }
-                    break;
-                case 13:
-                    parse(event.target.value);
-                    event.target.value = '';
-                    break;
-            }
-        };
-    </script>
+<script src="src/main.js"></script>
 </body>
 </html>
